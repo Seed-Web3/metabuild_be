@@ -1,0 +1,73 @@
+// open here: https://dbdiagram.io/d/6349cf02f0018a1c5f09b4bc
+
+Table company as C {
+  id int [pk, increment] // auto-increment
+  name varchar
+  logo varchar // URL/IPFS
+  twitter varchar
+  website varchar
+  Indexes {
+       id [pk]
+   }
+}
+
+Table job as J {
+  id int [pk, increment] // auto-increment
+  company_id int [ref: > C.id]
+  position varchar
+  description text
+
+
+  bounty number // 0 means no bounty
+  status job_status
+  Indexes {
+       id [pk]
+   }
+}
+
+Table job_skill_required as JSR {
+  id int [pk, increment] // auto-increment
+  job_id int  [ref: > J.id]
+  skill_id int [ref: > S.id]
+}
+
+Table skill as S {
+  id int [pk, increment] // auto-increment
+  name varchar
+}
+
+Table users as U {
+    id uuid [pk]
+    near_address varchar
+    first_name varchar
+    last_name varchar
+    nickname varchar
+    bio text
+    created_at varchar
+    Indexes {
+        id [pk]
+        near_address
+    }
+}
+
+Enum job_status {
+  draft
+  listed
+  suspended
+}
+
+Table application as A {
+  id int [pk, increment] // auto-increment
+  user_id int [ref: > U.id]
+  job_id int  [ref: > J.id]
+  status application_status
+  job_contact_email varchar
+  salary_from number
+  salary_to number
+}
+
+Enum application_status {
+  created
+  listed
+  suspended
+}

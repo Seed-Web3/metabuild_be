@@ -1,0 +1,30 @@
+
+spring:
+  jpa:
+#    hibernate.ddl-auto: update
+    hibernate.ddl-auto: create-drop
+    show-sql: true
+    database-platform: org.hibernate.dialect.MariaDBDialect
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  mvc.pathmatch.matching-strategy: "ant_path_matcher"
+
+server:
+  port: 17641
+
+jwt:
+  secretkey: ${JWT_SECRET}
+  expiration_in_hours: 1
+
+logging:
+  level:
+    org.springframework: ERROR
+    com.seed.careerhub: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    file: "%d %p %c{1.} [%t] %m%n"
+  file:
+    name: app.log
