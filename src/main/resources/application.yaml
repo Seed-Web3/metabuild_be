@@ -41,3 +41,7 @@ logging:
     file: "%d %p %c{1.} [%t] %m%n"
   file:
     name: app.log
+
+magiclink:
+  subject: "SEED verification code"
+  expiresInMinute: 15
