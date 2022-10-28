@@ -7,6 +7,18 @@ spring:
     username: admin
     password:
 
-
 server:
   port: 8080
+
+magiclink:
+  host: http://localhost:8080
+
+
+logging:
+  level:
+    org.springframework: DEBUG
+    org.simplejavamail: TRACE
+
+simplejavamail:
+  javaxmail:
+    debug: true

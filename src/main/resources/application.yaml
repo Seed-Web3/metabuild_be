@@ -45,3 +45,4 @@ logging:
 magiclink:
   subject: "SEED verification code"
   expiresInMinute: 15
+  host: http://localhost:17641
