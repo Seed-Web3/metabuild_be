@@ -15,8 +15,8 @@ public class AuthenticationService {
     @Value("${magiclink.subject}")
     private String MAGIC_LINK_SUBJECT;
 
-    @Value("${magiclink.host}")
-    private String MAGIC_LINK_HOST;
+    @Value("${magiclink.uri}")
+    private String MAGIC_LINK_URI;
 
     private final MagicLinkRepository magicLinkRepository;
     private final SimpleEmailService emailService;
@@ -34,8 +34,8 @@ public class AuthenticationService {
 
     private String getMagicLinkMessage(String uuid) {
         return String.format("Dear User, \n<br/>" +
-                "This is your magic link to login: %s/magicLink?code=%s <br/>\n" +
+                "This is your magic link to login: %s?code=%s <br/>\n" +
                 "\n<br/>" +
-                " - SEED Career Hub", MAGIC_LINK_HOST, uuid);
+                " - SEED Career Hub", MAGIC_LINK_URI, uuid);
     }
 }
