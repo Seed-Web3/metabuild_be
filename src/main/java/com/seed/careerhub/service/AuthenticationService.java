@@ -1,6 +1,7 @@
 package com.seed.careerhub.service;
 
 import com.seed.careerhub.domain.MagicLink;
+import com.seed.careerhub.exception.AccessDenied;
 import com.seed.careerhub.jpa.MagicLinkRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,14 +28,20 @@ public class AuthenticationService {
     }
 
     public void sendMagicLink(String email) throws MessagingException {
-        MagicLink link = new MagicLink(MAGIC_LINK_EXPIRES_IN_MINUTE);
+        MagicLink link = new MagicLink(email, MAGIC_LINK_EXPIRES_IN_MINUTE);
         magicLinkRepository.save(link);
-        emailService.sendEmail(email, MAGIC_LINK_SUBJECT, getMagicLinkMessage(link.getUuid()));
+        emailService.sendHtmlEmail(email, MAGIC_LINK_SUBJECT, getMagicLinkMessage(link.getCode()));
+    }
+
+    public String verifyMagicLink(String code) throws MessagingException {
+        MagicLink link = magicLinkRepository.findOneByCode(code).orElseThrow(() -> new AccessDenied("Wrong code"));
+        magicLinkRepository.delete(link);
+        return link.getEmail();
     }
 
     private String getMagicLinkMessage(String uuid) {
         return String.format("Dear User, \n<br/>" +
-                "This is your magic link to login: %s?code=%s <br/>\n" +
+                "This is your <a href='%s?code=%s'>MAGIC LINK</a> to login<br/>\n" +
                 "\n<br/>" +
                 " - SEED Career Hub", MAGIC_LINK_URI, uuid);
     }
