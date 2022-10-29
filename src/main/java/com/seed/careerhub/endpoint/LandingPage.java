@@ -33,7 +33,7 @@ public class LandingPage {
     public ResponseEntity<?> sendTestMail(@RequestParam String to,
                                           @RequestParam String subject,
                                           @RequestParam String body) throws MessagingException {
-        emailService.sendEmail(to, subject, body);
+        emailService.sendHtmlEmail(to, subject, body);
         return ResponseEntity.ok("Test emaill sent");
     }
 }

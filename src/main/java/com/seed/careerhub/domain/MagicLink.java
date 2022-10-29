@@ -7,6 +7,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,11 +29,18 @@ public class MagicLink {
             }
     )
     private Long id;
-    private final String uuid;
+
+    @Column(unique=true)
+    private final String code;
+
+    @Column(unique=true)
+    private String email;
+
     private Date expiryDate;
 
-    public MagicLink(int expiresInMinute) {
-        this.uuid = UUID.randomUUID().toString();
+    public MagicLink(String email, int expiresInMinute) {
+        this.code = UUID.randomUUID().toString();
+        this.email = email;
         this.expiryDate = DateUtils.addMinutes(new Date(), expiresInMinute);
     }
 
@@ -40,7 +48,7 @@ public class MagicLink {
      * No-arg constructor (used by Spring)
      */
     private MagicLink() {
-        this.uuid = UUID.randomUUID().toString();
+        this.code = UUID.randomUUID().toString();
     }
 
 }

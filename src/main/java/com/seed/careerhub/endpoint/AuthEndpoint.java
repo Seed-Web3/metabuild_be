@@ -149,4 +149,14 @@ public class AuthEndpoint {
     }
 
 
+    @Operation(summary = "Use magic link to login")
+    @GetMapping("email/magicLink")
+    public ResponseEntity<?> useMagicLink(@RequestParam String code) throws MessagingException {
+        String email = authenticationService.verifyMagicLink(code);
+        final UserDetails userDetails = userDetailsService.loadUserByEthAddress(email);
+        final String jwt = jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
+
+
 }

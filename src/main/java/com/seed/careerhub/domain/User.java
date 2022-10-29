@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "USERS")
@@ -33,10 +30,17 @@ public class User {
 
     private String firstName;
     private String lastName;
+
+    @Column(unique=true)
     private String nickName;
     private String aboutMe;
     private String ethAddress;
+
+    @Column(unique=true)
     private String nearAddress;
+
+    @Column(unique=true)
+    private String email;
 
     /**
      * Useful constructor when id is not yet known.
