@@ -5,5 +5,4 @@ import lombok.Data;
 @Data
 public class MagicLinkRequest {
     String email;
-    String code;
 }
