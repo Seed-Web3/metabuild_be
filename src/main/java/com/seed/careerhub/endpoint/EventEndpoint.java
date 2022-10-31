@@ -79,7 +79,7 @@ public class EventEndpoint {
     public Badge saveUserClaimForEvent(@PathVariable Long eventId) {
         logger.debug("Create user badge for an event[{}]", eventId);
         String address = EndpointUtil.getLoggedInAddress();
-        User user = userRepository.findByEthAddress(address);
+        User user = userRepository.findByNearAddress(address);
         Badge badge = new Badge("", eventId, user.getId());
         return badgeRepository.save(badge);
     }
@@ -97,7 +97,7 @@ public class EventEndpoint {
     @PostMapping("{eventUUID}/user/{address}")
     public Badge saveUserClaimForEvent(@PathVariable String eventUUID, @PathVariable String address) {
         logger.debug("Create user badge with address '{}' for an event '{}'", address, eventUUID);
-        User user = userRepository.findByEthAddress(address);
+        User user = userRepository.findByNearAddress(address);
         Event event = eventRepository.findByUuid(eventUUID);
         Badge badge = new Badge("", event.getId(), user.getId());
         return badgeRepository.save(badge);

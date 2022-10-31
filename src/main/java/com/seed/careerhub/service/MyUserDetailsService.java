@@ -31,7 +31,7 @@ public class MyUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return loadUserByEthAddress(username);
+        return loadUserByEmail(username);
     }
 
     /**
@@ -41,7 +41,7 @@ public class MyUserDetailsService implements UserDetailsService {
      * @return UserDetails
      * @throws UsernameNotFoundException
      */
-    public UserDetails loadUserByEthAddress(String publicAddress) throws UsernameNotFoundException {
+    public UserDetails loadUserByNearAddress(String publicAddress) throws UsernameNotFoundException {
         List<? extends GrantedAuthority> authorities = new ArrayList<>();
         return new User(publicAddress, encoder.encode(""), authorities);
     }
