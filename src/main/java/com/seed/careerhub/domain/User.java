@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "USERS")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     @Id
@@ -28,13 +28,11 @@ public class User {
     )
     private Long id;
 
-    private String firstName;
-    private String lastName;
+    private String name;
 
     @Column(unique=true)
-    private String nickName;
-    private String aboutMe;
-    private String ethAddress;
+    private String handle;
+    private String bio;
 
     @Column(unique=true)
     private String nearAddress;
@@ -42,20 +40,18 @@ public class User {
     @Column(unique=true)
     private String email;
 
-    /**
-     * Useful constructor when id is not yet known.
-     *
-     * @param firstName
-     * @param lastName
-     */
-    public User(String firstName, String lastName, String ethAddress) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.ethAddress = ethAddress;
-    }
+    private String twitter;
+    private String github;
+    private String linkedin;
+    private String website;
 
-    public User(String ethAddress) {
-        this.ethAddress = ethAddress;
-    }
+    private String mainSkill;
+//    private String skills;
 
+    private boolean openToJobOpportunity;
+    private boolean openToRemoteJob;
+    private boolean receiveNewJobEmail;
+
+    private boolean showPublicAddress;
+    private boolean showLocation;
 }

@@ -1,5 +1,6 @@
 package com.seed.careerhub.util;
 
+import com.seed.careerhub.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -43,6 +44,11 @@ public class JwtUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
+    }
+
+    public String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, user.getEmail());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {

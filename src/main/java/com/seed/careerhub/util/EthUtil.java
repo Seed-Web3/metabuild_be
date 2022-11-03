@@ -65,9 +65,9 @@ public class EthUtil {
         return match;
     }
 
-    public static boolean isEthAddress(String text) {
-        return hasLength(text)
-                && startsWithIgnoreCase(text, "0x")
-                && !text.contains(".");
-    }
+//    public static boolean isEthAddress(String text) {
+//        return hasLength(text)
+//                && startsWithIgnoreCase(text, "0x")
+//                && !text.contains(".");
+//    }
 }

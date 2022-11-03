@@ -11,6 +11,7 @@ import com.seed.careerhub.model.MagicLinkRequest;
 import com.seed.careerhub.model.NetworkType;
 import com.seed.careerhub.service.AuthenticationService;
 import com.seed.careerhub.service.MyUserDetailsService;
+import com.seed.careerhub.service.UserService;
 import com.seed.careerhub.util.EthUtil;
 import com.seed.careerhub.util.JwtUtil;
 import com.seed.careerhub.util.NearUtil;
@@ -46,13 +47,16 @@ public class AuthEndpoint {
 
     private final JwtUtil jwtUtil;
 
-    public AuthEndpoint(UserRepository userRepository, UserNonceRepository userNonceRepository, AuthenticationManager authenticationManager, MyUserDetailsService userDetailsService, AuthenticationService authenticationService, JwtUtil jwtUtil) {
+    private final UserService userService;
+
+    public AuthEndpoint(UserRepository userRepository, UserNonceRepository userNonceRepository, AuthenticationManager authenticationManager, MyUserDetailsService userDetailsService, AuthenticationService authenticationService, JwtUtil jwtUtil, UserService userService) {
         this.userRepository = userRepository;
         this.userNonceRepository = userNonceRepository;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.authenticationService = authenticationService;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
 
@@ -111,15 +115,16 @@ public class AuthEndpoint {
             throw new AccessDenied("Error during authentication", e);
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByEthAddress(publicAddress);
+        final UserDetails userDetails = userDetailsService.loadUserByNearAddress(publicAddress);
         final String jwt = jwtUtil.generateToken(userDetails);
 
         // Let's clear user's nonce (avoid reusing nonce, forcing re-sign a new message)
         clearNonce(publicAddress);
 
-        User user = userRepository.findByEthAddress(publicAddress);
+        User user = userRepository.findByNearAddress(publicAddress);
         if (user == null) {
-            user = new User(publicAddress);
+            user = new User();
+            user.setNearAddress(publicAddress);
             userRepository.save(user);
         }
 
@@ -153,10 +158,18 @@ public class AuthEndpoint {
     @GetMapping("email/magicLink")
     public ResponseEntity<?> useMagicLink(@RequestParam String code) throws MessagingException {
         String email = authenticationService.verifyMagicLink(code);
-        final UserDetails userDetails = userDetailsService.loadUserByEthAddress(email);
-        final String jwt = jwtUtil.generateToken(userDetails);
+        User user = userRepository.findOneByEmail(email).orElseGet(() ->
+                userService.createUserWithEmail(email));
+        final String jwt = jwtUtil.generateToken(user);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
+    @Operation(summary = "Fake JWT generator")
+    @GetMapping("jwt")
+    public ResponseEntity<?> fakeJwt() {
+        final UserDetails userDetails = userDetailsService.loadUserByEmail("h@cker.com");
+        final String jwt = jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
 
 }

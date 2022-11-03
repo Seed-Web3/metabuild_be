@@ -5,7 +5,6 @@ import com.seed.careerhub.exception.DataNotFound;
 import com.seed.careerhub.jpa.UserRepository;
 import com.seed.careerhub.model.UserRequest;
 import com.seed.careerhub.util.EndpointUtil;
-import com.seed.careerhub.util.EthUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,10 +66,21 @@ public class UserEndpoint {
             throw new DataNotFound();
         }
 
-        user.setAboutMe(userRequest.getAboutMe());
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setNickName(userRequest.getNickName());
+        user.setName(userRequest.getName());
+        user.setHandle(userRequest.getHandle());
+        user.setBio(userRequest.getBio());
+//        user.setNearAddress(userRequest.get);
+//        user.setEmail(userRequest.get);
+        user.setTwitter(userRequest.getTwitter());
+        user.setGithub(userRequest.getGithub());
+        user.setLinkedin(userRequest.getLinkedin());
+        user.setWebsite(userRequest.getWebsite());
+        user.setMainSkill(userRequest.getMainSkill());
+        user.setOpenToJobOpportunity(userRequest.isOpenToJobOpportunity());
+        user.setOpenToRemoteJob(userRequest.isOpenToRemoteJob());
+        user.setReceiveNewJobEmail(userRequest.isReceiveNewJobEmail());
+        user.setShowPublicAddress(userRequest.isShowPublicAddress());
+        user.setShowLocation(userRequest.isShowLocation());
 
         return userRepository.save(user);
     }
@@ -78,18 +88,22 @@ public class UserEndpoint {
     /**
      * Retrieves the logged-in user object or null if not found.
      *
-     * @return
+     * @return User
      */
     private User getUser() {
         String address = EndpointUtil.getLoggedInAddress();
         if ("anonymousUser".equalsIgnoreCase(address)) {
             return null;
-        } else if (EthUtil.isEthAddress(address)) {
-            return userRepository.findByEthAddress(address);
+        } else if (isEmailAddress(address)) {
+            return userRepository.findOneByEmail(address).orElseThrow(DataNotFound::new);
         } else {
             return userRepository.findByNearAddress(address);
         }
 
+    }
+
+    private boolean isEmailAddress(String address) {
+        return address != null && address.contains("@");
     }
 
 }
