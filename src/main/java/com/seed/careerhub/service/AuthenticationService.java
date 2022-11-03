@@ -20,9 +20,9 @@ public class AuthenticationService {
     private String MAGIC_LINK_URI;
 
     private final MagicLinkRepository magicLinkRepository;
-    private final SimpleEmailService emailService;
+    private final EmailService emailService;
 
-    public AuthenticationService(MagicLinkRepository magicLinkRepository, SimpleEmailService emailService) {
+    public AuthenticationService(MagicLinkRepository magicLinkRepository, EmailService emailService) {
         this.magicLinkRepository = magicLinkRepository;
         this.emailService = emailService;
     }

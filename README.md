@@ -5,6 +5,7 @@ http://localhost:17641/swagger-ui/index.html
 
 DEV: http://localhost:8080/swagger-ui/index.html
 
+DO: https://goldfish-app-xsljf.ondigitalocean.app/swagger-ui/index.html
 
 ## DB design
 https://dbdiagram.io/d/6349cf02f0018a1c5f09b4bc

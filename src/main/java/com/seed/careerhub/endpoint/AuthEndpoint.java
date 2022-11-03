@@ -11,6 +11,7 @@ import com.seed.careerhub.model.MagicLinkRequest;
 import com.seed.careerhub.model.NetworkType;
 import com.seed.careerhub.service.AuthenticationService;
 import com.seed.careerhub.service.MyUserDetailsService;
+import com.seed.careerhub.service.UserService;
 import com.seed.careerhub.util.EthUtil;
 import com.seed.careerhub.util.JwtUtil;
 import com.seed.careerhub.util.NearUtil;
@@ -46,13 +47,16 @@ public class AuthEndpoint {
 
     private final JwtUtil jwtUtil;
 
-    public AuthEndpoint(UserRepository userRepository, UserNonceRepository userNonceRepository, AuthenticationManager authenticationManager, MyUserDetailsService userDetailsService, AuthenticationService authenticationService, JwtUtil jwtUtil) {
+    private final UserService userService;
+
+    public AuthEndpoint(UserRepository userRepository, UserNonceRepository userNonceRepository, AuthenticationManager authenticationManager, MyUserDetailsService userDetailsService, AuthenticationService authenticationService, JwtUtil jwtUtil, UserService userService) {
         this.userRepository = userRepository;
         this.userNonceRepository = userNonceRepository;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.authenticationService = authenticationService;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
 
