@@ -2,9 +2,11 @@ package com.seed.careerhub;
 
 import com.seed.careerhub.domain.Badge;
 import com.seed.careerhub.domain.Event;
+import com.seed.careerhub.domain.Skill;
 import com.seed.careerhub.domain.User;
 import com.seed.careerhub.jpa.BadgeRepository;
 import com.seed.careerhub.jpa.EventRepository;
+import com.seed.careerhub.jpa.SkillRepository;
 import com.seed.careerhub.jpa.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,18 +15,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 @Profile({"default","dev"})
 class LoadDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
+    List<String> baseSkills = Arrays.asList("Full Stack Dev","Solidity","Rust", "Research","Java","JavaScript",
+            "Solana","Product Manager");
+
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository,
             EventRepository eventRepository,
+            SkillRepository skillRepository,
             BadgeRepository badgeRepository) {
         return args -> {
 
-            // Create 3 users
+            // Create users
             User user = new User();
             user.setId(1L);
             user.setName("NEAR Hacker");
@@ -42,6 +51,10 @@ class LoadDatabase {
             user.setShowLocation(true);
             user.setShowPublicAddress(true);
             log.info("Created new User: " + userRepository.save(user));
+
+            for (String tag: baseSkills) {
+                log.info("Created skill: " + skillRepository.save(new Skill(tag)));
+            }
 //
 //            User user2 = new User("Poppy", "Middleton", "0xa485A768CB6DE1DE1e0Fc5AB2b93703a11615c1A");
 //            log.info("Created new User: {}", userRepository.save(user2));

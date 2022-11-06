@@ -81,11 +81,12 @@ public class AuthEndpoint {
         return authenticate(authenticationRequest, NetworkType.NEAR);
     }
 
-    @Operation(summary = "Authenticates a user via signed message with NEAR wallet")
-    @PostMapping("eth")
-    public ResponseEntity<?> authenticateInEthereum(@RequestBody AuthenticationRequest authenticationRequest) {
-        return authenticate(authenticationRequest, NetworkType.ETHEREUM);
-    }
+//    // Disabled as Aurora not yet supported
+//    @Operation(summary = "Authenticates a user via signed message with NEAR wallet")
+//    @PostMapping("eth")
+//    public ResponseEntity<?> authenticateInEthereum(@RequestBody AuthenticationRequest authenticationRequest) {
+//        return authenticate(authenticationRequest, NetworkType.ETHEREUM);
+//    }
 
     private ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest, NetworkType networkType) {
         String publicAddress = authenticationRequest.getPublicAddress();

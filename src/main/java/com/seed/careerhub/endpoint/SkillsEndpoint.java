@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("/skills")
 public class SkillsEndpoint {
 
+    private static final int MIN_SKILL_LENGTH = 3;
     private final SkillRepository skillRepository;
 
     public SkillsEndpoint(SkillRepository skillRepository) {
@@ -34,11 +35,11 @@ public class SkillsEndpoint {
     }
 
 
-    @Operation(summary = "Get all skill tags")
+    @Operation(summary = "Autocomplete skill")
     @GetMapping("{tag}")
     public ResponseEntity<?> findSkills(@PathVariable String tag) {
         try {
-            if (tag.trim().length() < 3) {
+            if (tag.trim().length() < MIN_SKILL_LENGTH) {
                 throw new DataNotFound();
             }
             List<Skill> skills = skillRepository.findAllByNameContaining(tag.trim().toLowerCase());
