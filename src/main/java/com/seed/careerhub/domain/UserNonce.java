@@ -17,11 +17,9 @@ import javax.persistence.Id;
 public class UserNonce {
     @Id private String address;
     private String nonce;
-    private String account;
 
     public void UserNonce(String address, String nonce) {
         this.address = address;
         this.nonce = nonce;
-        this.account = null;
     }
 }

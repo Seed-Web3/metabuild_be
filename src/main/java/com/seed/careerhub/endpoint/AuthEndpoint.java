@@ -70,7 +70,7 @@ public class AuthEndpoint {
             nonce = userNonce.get().getNonce();
         } else {
             nonce = UUID.randomUUID().toString();
-            userNonceRepository.save(new UserNonce(address, nonce, account));
+            userNonceRepository.save(new UserNonce(address, nonce));
         }
         return ResponseEntity.ok(nonce);
     }
