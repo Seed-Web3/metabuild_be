@@ -5,10 +5,7 @@ import com.seed.careerhub.domain.UserNonce;
 import com.seed.careerhub.exception.AccessDenied;
 import com.seed.careerhub.jpa.UserNonceRepository;
 import com.seed.careerhub.jpa.UserRepository;
-import com.seed.careerhub.model.AuthenticationRequest;
-import com.seed.careerhub.model.AuthenticationResponse;
-import com.seed.careerhub.model.MagicLinkRequest;
-import com.seed.careerhub.model.NetworkType;
+import com.seed.careerhub.model.*;
 import com.seed.careerhub.service.AuthenticationService;
 import com.seed.careerhub.service.MyUserDetailsService;
 import com.seed.careerhub.service.UserService;
@@ -171,6 +168,22 @@ public class AuthEndpoint {
         final UserDetails userDetails = userDetailsService.loadUserByEmail("h@cker.com");
         final String jwt = jwtUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
+
+
+    @Operation(summary = "Verify OAuth2 access token via Google")
+    @PostMapping("google")
+    public ResponseEntity<?> verifyAccessToken(@RequestBody OAuth2Request oauth2Request) throws MessagingException {
+        String email = oauth2Request.getEmail();
+        if (authenticationService.isOAuth2AccessTokenValid(oauth2Request.getAccessToken(), email)) {
+            User user = userRepository.findOneByEmail(email).orElseGet(() ->
+                    userService.createUserWithEmail(email));
+            final String jwt = jwtUtil.generateToken(user);
+            return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        } else {
+            logger.warn("AccessToken is not valid");
+            throw new AccessDenied("No supported network");
+        }
     }
 
 }

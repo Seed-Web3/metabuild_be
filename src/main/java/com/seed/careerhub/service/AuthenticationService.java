@@ -45,4 +45,9 @@ public class AuthenticationService {
                 "\n<br/>" +
                 " - SEED Career Hub", MAGIC_LINK_URI, uuid);
     }
+
+    // TODO implement it
+    public boolean isOAuth2AccessTokenValid(String accessToken, String email) {
+        return true;
+    }
 }
