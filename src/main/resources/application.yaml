@@ -45,4 +45,6 @@ logging:
 magiclink:
   subject: "SEED verification code"
   expiresInMinute: 15
-  uri: http://localhost:3000/magicLink
+  uri: http://localhost:1234/magicLink
+
+frontendUri: http://localhost:1234/

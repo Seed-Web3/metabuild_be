@@ -25,7 +25,7 @@ public class LandingPage {
     @Operation(summary = "A landing page handle")
     @GetMapping
     public ResponseEntity<?> landingPage() {
-        return ResponseEntity.ok("Welcome in SEED Cereer Hub backend");
+        return ResponseEntity.ok("Welcome in SEED Cereer Hub backend. <br/><a href='/swagger-ui/index.html'>Swagger</a>");
     }
 
     @Operation(summary = "A landing page handle")

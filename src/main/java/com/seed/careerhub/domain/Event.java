@@ -30,6 +30,7 @@ public class Event {
     private String name;
     private final String uuid;
     private String description;
+    private String url;
     private Long startDate;
     private Long expiryDate;
 
@@ -58,11 +59,12 @@ public class Event {
      *
      * @param name
      */
-    public Event(Long id, String name, String description, Long startDate, Long expiryDate) {
+    public Event(Long id, String name, String description, String url, Long startDate, Long expiryDate) {
         this.uuid = generateUUID();
         this.id = id;
         this.name = name;
         this.description = description;
+        this.url = url;
         this.startDate = startDate;
         this.expiryDate = expiryDate;
     }
@@ -71,7 +73,4 @@ public class Event {
         return UUID.randomUUID().toString();
     }
 
-    public String getEventLink() {
-        return "http://seedin.careers/#/event/" + this.uuid + "#/";
-    }
 }

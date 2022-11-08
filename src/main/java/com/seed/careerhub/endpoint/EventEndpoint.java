@@ -3,11 +3,9 @@ package com.seed.careerhub.endpoint;
 import com.seed.careerhub.domain.Badge;
 import com.seed.careerhub.domain.Event;
 import com.seed.careerhub.domain.User;
-import com.seed.careerhub.exception.DataNotFound;
-import com.seed.careerhub.jpa.BadgeRepository;
-import com.seed.careerhub.jpa.EventRepository;
-import com.seed.careerhub.jpa.UserRepository;
+import com.seed.careerhub.model.EventDTO;
 import com.seed.careerhub.model.EventRequest;
+import com.seed.careerhub.service.EventService;
 import com.seed.careerhub.util.EndpointUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -21,37 +19,30 @@ import java.util.List;
 public class EventEndpoint {
 
     Logger logger = LoggerFactory.getLogger(AuthEndpoint.class);
-    private final EventRepository eventRepository;
-    private final BadgeRepository badgeRepository;
-    private final UserRepository userRepository;
+    private final EventService eventService;
 
     /**
      * Constructor.
      *
-     * @param eventRepository eventRepository
-     * @param badgeRepository badgeRepository
-     * @param userRepository userRepository
+     * @param eventService eventService
      */
-    public EventEndpoint(EventRepository eventRepository, BadgeRepository badgeRepository, UserRepository userRepository) {
-        this.eventRepository = eventRepository;
-        this.badgeRepository = badgeRepository;
-        this.userRepository = userRepository;
+    public EventEndpoint(EventService eventService) {
+        this.eventService = eventService;
     }
 
     /**
-     *
-     * @param eventRequest
+     * @param eventRequest eventRequest
      * @return Event
      */
     @Operation(summary = "Saves event details")
     @PostMapping()
-    public Event save(@RequestBody EventRequest eventRequest) {
+    public EventDTO save(@RequestBody EventRequest eventRequest) {
         logger.debug("Save a new event with name {}", eventRequest.getName());
         Event event = new Event(eventRequest.getName(),
                 eventRequest.getDescription(),
                 eventRequest.getStartDate(),
                 eventRequest.getExpiryDate());
-        return eventRepository.save(event);
+        return eventService.save(event);
     }
 
     /**
@@ -64,12 +55,12 @@ public class EventEndpoint {
     @GetMapping("{eventId}/users")
     public List<User> getUsersForEvent(@PathVariable Long eventId) {
         logger.debug("Get users who has claimed the Badge from an event[{}]", eventId);
-        return eventRepository.findUsersByEventId(eventId);
+        return eventService.findUsersByEventId(eventId);
     }
 
     /**
      * Creates a {@link com.seed.careerhub.domain.Badge)} with user who is
-     * logged-in, and witht eventId from teh parameter.
+     * logged-in, and with eventId from teh parameter.
      *
      * @param eventId eventId
      * @return Badge
@@ -79,15 +70,13 @@ public class EventEndpoint {
     public Badge saveUserClaimForEvent(@PathVariable Long eventId) {
         logger.debug("Create user badge for an event[{}]", eventId);
         String address = EndpointUtil.getLoggedInAddress();
-        User user = userRepository.findByNearAddress(address);
-        Badge badge = new Badge("", eventId, user.getId());
-        return badgeRepository.save(badge);
+        return eventService.claim(eventId, address);
     }
 
     /**
      * It's helper method for admins
      * Creates a {@link com.seed.careerhub.domain.Badge)} with user and event from the parameters
-     * UIID of event used in parameter, because the sent event link contains only this.
+     * UUID of event used in parameter, because the sent event link contains only this.
      *
      * @param eventUUID uuid of event
      * @param address wallet address of user
@@ -97,10 +86,7 @@ public class EventEndpoint {
     @PostMapping("{eventUUID}/user/{address}")
     public Badge saveUserClaimForEvent(@PathVariable String eventUUID, @PathVariable String address) {
         logger.debug("Create user badge with address '{}' for an event '{}'", address, eventUUID);
-        User user = userRepository.findByNearAddress(address);
-        Event event = eventRepository.findByUuid(eventUUID);
-        Badge badge = new Badge("", event.getId(), user.getId());
-        return badgeRepository.save(badge);
+        return eventService.claim(eventUUID, address);
     }
 
     /**
@@ -110,8 +96,8 @@ public class EventEndpoint {
      */
     @Operation(summary = "Gets events")
     @GetMapping("all")
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
+    public List<EventDTO> getAllEvents() {
+        return eventService.findAll();
     }
 
     /**
@@ -121,8 +107,8 @@ public class EventEndpoint {
      */
     @Operation(summary = "Gets event details")
     @GetMapping("{eventId}")
-    public Event getEvent(@PathVariable Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(DataNotFound::new);
+    public EventDTO getEvent(@PathVariable Long eventId) {
+        return eventService.findById(eventId);
     }
 
 }

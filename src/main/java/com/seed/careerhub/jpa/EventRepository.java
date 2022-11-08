@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("select u from Badge b left join User u on b.userId = u.id where b.eventId = ?1 ")
     List<User> findUsersByEventId(Long eventId);
 
-    Event findByUuid(String uuid);
+    Optional<Event> findOneByUuid(String uuid);
 }
