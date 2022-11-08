@@ -42,7 +42,7 @@ public class SkillsEndpoint {
             if (tag.trim().length() < MIN_SKILL_LENGTH) {
                 throw new DataNotFound();
             }
-            List<Skill> skills = skillRepository.findAllByNameContaining(tag.trim().toLowerCase());
+            List<Skill> skills = skillRepository.findAllByNameContainingIgnoreCase(tag.trim().toLowerCase());
             return ResponseEntity.ok(skills);
         } catch (Exception e) {
             e.printStackTrace();

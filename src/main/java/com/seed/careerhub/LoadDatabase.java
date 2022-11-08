@@ -8,6 +8,7 @@ import com.seed.careerhub.jpa.BadgeRepository;
 import com.seed.careerhub.jpa.EventRepository;
 import com.seed.careerhub.jpa.SkillRepository;
 import com.seed.careerhub.jpa.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -22,8 +23,32 @@ import java.util.*;
 class LoadDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
-    List<String> baseSkills = Arrays.asList("Full Stack Dev", "Solidity", "Rust", "Research", "Java", "JavaScript",
-            "Solana", "Product Manager");
+    List<String> baseSkills = Arrays.asList("Community Manager",
+            "Business Development",
+            "Copywriter",
+            "Event Manager",
+            "Analyst",
+            "Design",
+            "Branding",
+            "Product Manager",
+            "Project Manager",
+            "Full Stack",
+            "UI (Figma)",
+            "UX",
+            "ReactJS",
+            "VueJS",
+            "Java",
+            "Python",
+            "Backend Database",
+            "Smart Contract (Rust)",
+            "Smart Contract (Solidity)",
+            "Junior",
+            "Senior",
+            "NFT",
+            "Defi",
+            "GameFi",
+            "Metaverse",
+            "Marketplace");
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository,
