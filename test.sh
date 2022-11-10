@@ -13,9 +13,10 @@
 #curl 'http://localhost:8080/auth/email/magicLink?code=2966be25-8d92-4e7d-a1c1-7e6a6d2504b6' \
 #  -H 'Content-Type: application/json'
 
-curl 'http://localhost:8080/auth/jwt' \
-  -H 'Content-Type: application/json' | jq
+#curl 'http://localhost:8080/user' \
+#  -H 'Content-Type: application/json' \
+#  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoQGNrZXIuY29tIiwiZXhwIjoxNjY3MzQyODEyLCJpYXQiOjE2NjczMzkyMTJ9.7kFlOdaeSlSrbxkKs9lHjxe5Ekn53DbR65fH-TEyW3M' | jq
+#
 
-curl 'http://localhost:8080/user' \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoQGNrZXIuY29tIiwiZXhwIjoxNjY3MzQyODEyLCJpYXQiOjE2NjczMzkyMTJ9.7kFlOdaeSlSrbxkKs9lHjxe5Ekn53DbR65fH-TEyW3M' | jq
+JWT=$(curl -s 'http://localhost:8080/auth/jwt' -H 'Content-Type: application/json' | jq -r .jwt)
+curl 'http://localhost:8080/user/nfts' -H "Authorization: Bearer ${JWT}" | jq

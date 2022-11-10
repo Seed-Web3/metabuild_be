@@ -6,10 +6,15 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.MariaDBDialect
   datasource:
-    url: ${DB_URL}
+    jdbc-url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWWORD}
     driver-class-name: org.mariadb.jdbc.Driver
+  second-datasource:
+    jdbc-url: jdbc:postgresql://testnet.db.explorer.indexer.near.dev:5432/testnet_explorer
+    username: public_readonly
+    password: nearprotocol
+    driver-class-name: org.postgresql.Driver
   mvc.pathmatch.matching-strategy: "ant_path_matcher"
   mail:
     username: apikey

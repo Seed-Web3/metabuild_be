@@ -4,6 +4,7 @@ import com.seed.careerhub.domain.User;
 import com.seed.careerhub.exception.DataNotFound;
 import com.seed.careerhub.jpa.UserRepository;
 import com.seed.careerhub.model.UserRequest;
+import com.seed.careerhub.service.UserService;
 import com.seed.careerhub.util.EndpointUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,17 @@ import java.util.List;
 public class UserEndpoint {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * Constructor.
      *
      * @param userRepository userRepository
+     * @param userService userService
      */
-    public UserEndpoint(UserRepository userRepository) {
+    public UserEndpoint(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -106,4 +110,9 @@ public class UserEndpoint {
         return address != null && address.contains("@");
     }
 
+    @GetMapping("nfts")
+    public String getNearNftsByAccount() {
+        String email = EndpointUtil.getLoggedInAddress();
+        return userService.getNearNftsByUsername(email);
+    }
 }
