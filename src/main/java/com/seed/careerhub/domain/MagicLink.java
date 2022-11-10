@@ -20,12 +20,12 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MagicLink {
     @Id
-    @GeneratedValue(generator = "event-sequence-generator")
+    @GeneratedValue(generator = "magiclink-sequence-generator")
     @GenericGenerator(
-            name = "event-sequence-generator",
+            name = "magiclink-sequence-generator",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
-                    @Parameter(name = "sequence_name", value = "magic_link_sequence")
+                    @Parameter(name = "sequence_name", value = "magiclink_sequence")
             }
     )
     private Long id;

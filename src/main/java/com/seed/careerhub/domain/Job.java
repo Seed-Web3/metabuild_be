@@ -17,20 +17,32 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Skill {
+public class Job {
     @Id
-    @GeneratedValue(generator = "skill-sequence-generator")
+    @GeneratedValue(generator = "job-sequence-generator")
     @GenericGenerator(
-            name = "skill-sequence-generator",
+            name = "job-sequence-generator",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
-                    @Parameter(name = "sequence_name", value = "skill_sequence")
+                    @Parameter(name = "sequence_name", value = "job_sequence")
             }
     )
     private Long id;
-    private String name;
 
-    public Skill(String name) {
-        this.name = name;
-    }
+    private String title;
+    private String description;
+    private String company;
+    private String skills;
+//    private Map salary;
+    private Integer salaryMin;
+    private Integer salaryMax;
+    private String salaryCurrency;
+    private String location;
+    private String email;
+    private String socials;
+    private String logo;
+//    private Map bounty;
+    private Integer bountyAmount;
+    private String bountyCurrency;
+
 }
