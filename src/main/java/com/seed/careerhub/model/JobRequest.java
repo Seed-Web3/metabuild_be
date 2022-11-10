@@ -10,16 +10,11 @@ public class JobRequest {
     String title;
     String description;
     String company;
-    List skills;
-    Map salary;
-//    String min;
-//    String max;
-//    String currency;
+    List<String> skills;
+    Map<String, Object> salary;
     String location;
     String email;
-    List socials;
+    List<Object> socials;
     String logo;
-    Map bounty;
-//    String amount;
-//    String currency;
+    Map<String, Object> bounty;
 }

@@ -2,13 +2,14 @@ package com.seed.careerhub.endpoint;
 
 import com.seed.careerhub.domain.Job;
 import com.seed.careerhub.jpa.JobRepository;
-import com.seed.careerhub.model.EventDTO;
 import com.seed.careerhub.model.JobRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -44,7 +45,9 @@ public class JobEndpoint {
             job.setSalaryMin((Integer) jobRequest.getSalary().get("min"));
             job.setSalaryMax((Integer) jobRequest.getSalary().get("max"));
         }
-        job.setSkills(String.join(" ", jobRequest.getSkills()));
+        if (jobRequest.getSkills() != null) {
+            job.setSkills(String.join(" ", jobRequest.getSkills()));
+        }
 //        job.setSocials(jobRequest.getSocials());
         job.setTitle(jobRequest.getTitle());
         return jobRepository.save(job);
@@ -60,5 +63,34 @@ public class JobEndpoint {
     @GetMapping("all")
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
+    }
+
+
+    @Operation(summary = "Filter jobs")
+    @GetMapping("")
+    public ResponseEntity<?> findSkills(@RequestParam(required = false) String skill,
+                                        @RequestParam(required = false) String location,
+                                        @RequestParam(required = false) Boolean isRemote) {
+        try {
+            List<Job> jobs;
+            if (skill == null) {
+                jobs = jobRepository.findByLocationContainingIgnoreCase(location.trim().toLowerCase());
+            } else {
+                jobs = jobRepository.findBySkillsContainingIgnoreCase(skill.trim());
+                if (location != null) {
+                    jobs = jobs
+                            .stream()
+                            .filter(j -> j.getLocation().toLowerCase().contains(location.toLowerCase()))
+                            .collect(Collectors.toList());
+                }
+                if (isRemote != null) {
+                    // TODO not in JSON
+                }
+            }
+            return ResponseEntity.ok(jobs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

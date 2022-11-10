@@ -52,3 +52,13 @@ curl -X 'POST' 'http://localhost:8080/job' \
     "currency": "USD"
   }
 }'
+curl 'http://localhost:8080/job' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "title": "Java Developer",
+  "skills": ["Java", "Hardhead", "Slang"],
+  "location": "Budapest"
+}'
+
+curl 'http://localhost:8080/job?skill=Hardhead'
+curl 'http://localhost:8080/job?skill=java&location=Buda'
