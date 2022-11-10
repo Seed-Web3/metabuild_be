@@ -2,10 +2,9 @@ package com.seed.careerhub.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seed.careerhub.model.AuthenticationRequest;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.bouncycastle.util.encoders.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import software.pando.crypto.nacl.Crypto;
 
 import java.io.IOException;
@@ -14,9 +13,9 @@ import java.security.PublicKey;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class NearUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(NearUtil.class);
     private static final OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final String url = "https://rpc.testnet.near.org";

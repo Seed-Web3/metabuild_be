@@ -13,8 +13,7 @@ import com.seed.careerhub.util.EthUtil;
 import com.seed.careerhub.util.JwtUtil;
 import com.seed.careerhub.util.NearUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,12 +24,10 @@ import javax.mail.MessagingException;
 import java.util.Optional;
 import java.util.UUID;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class AuthEndpoint {
-
-    Logger logger = LoggerFactory.getLogger(AuthEndpoint.class);
 
     private final UserRepository userRepository;
 
@@ -101,15 +98,15 @@ public class AuthEndpoint {
                     verified = true;
                 }
             } else {
-                logger.error("No supported network");
+                log.error("No supported network");
                 throw new AccessDenied("No supported network");
             }
             if (!verified) {
-                logger.warn("Signed message verification failed for address: {}", publicAddress);
+                log.warn("Signed message verification failed for address: {}", publicAddress);
                 throw new AccessDenied("Signed message verification failed");
             }
         } catch (Exception e) {
-            logger.error("Unhandled exception. Reason:", e);
+            log.error("Unhandled exception. Reason:", e);
             throw new AccessDenied("Error during authentication", e);
         }
 
@@ -144,7 +141,7 @@ public class AuthEndpoint {
         try {
             authenticationService.sendMagicLink(magicLinkRequest.getEmail());
         } catch (MessagingException e) {
-            logger.error("Failed to send magic link. Reason:", e);
+            log.error("Failed to send magic link. Reason:", e);
             throw new AccessDenied("Failed to send magic link", e);
         }
 
@@ -181,7 +178,7 @@ public class AuthEndpoint {
             final String jwt = jwtUtil.generateToken(user);
             return ResponseEntity.ok(new AuthenticationResponse(jwt));
         } else {
-            logger.warn("AccessToken is not valid");
+            log.warn("AccessToken is not valid");
             throw new AccessDenied("No supported network");
         }
     }

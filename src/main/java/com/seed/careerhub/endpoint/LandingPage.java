@@ -2,8 +2,6 @@ package com.seed.careerhub.endpoint;
 
 import com.seed.careerhub.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +13,6 @@ import javax.mail.MessagingException;
 @RestController
 @RequestMapping("/")
 public class LandingPage {
-    Logger logger = LoggerFactory.getLogger(LandingPage.class);
     private EmailService emailService;
 
     public LandingPage(EmailService emailService) {

@@ -8,17 +8,16 @@ import com.seed.careerhub.model.EventRequest;
 import com.seed.careerhub.service.EventService;
 import com.seed.careerhub.util.EndpointUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/event")
 public class EventEndpoint {
 
-    Logger logger = LoggerFactory.getLogger(AuthEndpoint.class);
     private final EventService eventService;
 
     /**
@@ -37,7 +36,7 @@ public class EventEndpoint {
     @Operation(summary = "Saves event details")
     @PostMapping()
     public EventDTO save(@RequestBody EventRequest eventRequest) {
-        logger.debug("Save a new event with name {}", eventRequest.getName());
+        log.debug("Save a new event with name {}", eventRequest.getName());
         Event event = new Event(eventRequest.getName(),
                 eventRequest.getDescription(),
                 eventRequest.getStartDate(),
@@ -54,7 +53,7 @@ public class EventEndpoint {
     @Operation(summary = "Gets users who claimed badge for an event")
     @GetMapping("{eventId}/users")
     public List<User> getUsersForEvent(@PathVariable Long eventId) {
-        logger.debug("Get users who has claimed the Badge from an event[{}]", eventId);
+        log.debug("Get users who has claimed the Badge from an event[{}]", eventId);
         return eventService.findUsersByEventId(eventId);
     }
 
@@ -68,7 +67,7 @@ public class EventEndpoint {
     @Operation(summary = "Claims badge for an event (by logged-in user)")
     @PostMapping("{eventId}/user")
     public Badge saveUserClaimForEvent(@PathVariable Long eventId) {
-        logger.debug("Create user badge for an event[{}]", eventId);
+        log.debug("Create user badge for an event[{}]", eventId);
         String address = EndpointUtil.getLoggedInAddress();
         return eventService.claim(eventId, address);
     }
@@ -85,7 +84,7 @@ public class EventEndpoint {
     @Operation(summary = "Helper call for admins to claim badge with wallet address for an event")
     @PostMapping("{eventUUID}/user/{address}")
     public Badge saveUserClaimForEvent(@PathVariable String eventUUID, @PathVariable String address) {
-        logger.debug("Create user badge with address '{}' for an event '{}'", address, eventUUID);
+        log.debug("Create user badge with address '{}' for an event '{}'", address, eventUUID);
         return eventService.claim(eventUUID, address);
     }
 
