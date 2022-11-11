@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -19,13 +18,14 @@ import java.util.Map;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    @Qualifier("postgressJdbcTemplate")
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public UserService(UserRepository userRepository, NamedParameterJdbcTemplate jdbcTemplate) {
         this.userRepository = userRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Autowired
-    @Qualifier("postgressJdbcTemplate")
-    private NamedParameterJdbcTemplate jdbcTemplate;
 
     public User createUserWithEmail(String email) {
         User user = new User();
