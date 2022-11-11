@@ -4,7 +4,8 @@ public enum BagdeCategory {
     CAREER("Career"),
     EDUCATION("Education"),
     HALL_OF_FRAME("Hall of frame"),
-    HIDE("Hide");
+    HIDE("Hide"),
+    UNCATEGORIZED("Uncategorized");
 
     private final String name;
 

@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Badge {
     @Id
@@ -32,6 +32,9 @@ public class Badge {
     private String name;
     private Long eventId;
     private Long userId;
+    private String nftAccount;
+    private String nftTokenId;
+    private BagdeCategory category;
 
     public Badge(String name, Long eventId, Long userId) {
         this.name = name;

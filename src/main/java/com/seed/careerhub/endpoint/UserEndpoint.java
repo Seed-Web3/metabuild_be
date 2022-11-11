@@ -1,5 +1,6 @@
 package com.seed.careerhub.endpoint;
 
+import com.seed.careerhub.domain.Badge;
 import com.seed.careerhub.domain.User;
 import com.seed.careerhub.exception.DataNotFound;
 import com.seed.careerhub.jpa.UserRepository;
@@ -111,7 +112,7 @@ public class UserEndpoint {
     }
 
     @GetMapping("nfts")
-    public String getNearNftsByAccount() {
+    public List<Badge> getNearNftsByAccount() {
         String email = EndpointUtil.getLoggedInAddress();
         return userService.getNearNftsByUsername(email);
     }
