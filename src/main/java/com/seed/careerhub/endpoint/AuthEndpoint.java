@@ -88,7 +88,7 @@ public class AuthEndpoint {
 
         try {
             if (networkType == NetworkType.NEAR) {
-                if (NearUtil.verifyAddressFromSignature(authenticationRequest, getNonce(publicAddress))) {
+                if (NearUtil.verifyAddressFromSignature(authenticationRequest, getNonce(authenticationRequest.getAccount()))) {
                     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(publicAddress, ""));
                     verified = true;
                 }

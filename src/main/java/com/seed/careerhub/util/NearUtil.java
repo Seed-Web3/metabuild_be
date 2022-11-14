@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seed.careerhub.model.AuthenticationRequest;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.bitcoinj.core.Base58;
 import org.bouncycastle.util.encoders.Base64;
 import software.pando.crypto.nacl.Crypto;
 
@@ -77,7 +78,7 @@ public class NearUtil {
     public static boolean verifySignature(String publicKey,
                                           String signature,
                                           String message) {
-        PublicKey pKey = Crypto.signingPublicKey(Base64.decode(publicKey));
+        PublicKey pKey = Crypto.signingPublicKey(Base58.decode(publicKey.replace("ed25519:", "")));
         byte[] msg = message.getBytes(StandardCharsets.UTF_8);
         byte[] sig = Base64.decode(signature);
         return Crypto.signVerify(pKey, msg, sig);
