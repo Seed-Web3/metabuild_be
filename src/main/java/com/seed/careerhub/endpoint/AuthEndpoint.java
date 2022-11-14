@@ -75,33 +75,22 @@ public class AuthEndpoint {
         return authenticate(authenticationRequest, NetworkType.NEAR);
     }
 
-//    // Disabled as Aurora not yet supported
-//    @Operation(summary = "Authenticates a user via signed message with NEAR wallet")
-//    @PostMapping("eth")
-//    public ResponseEntity<?> authenticateInEthereum(@RequestBody AuthenticationRequest authenticationRequest) {
-//        return authenticate(authenticationRequest, NetworkType.ETHEREUM);
-//    }
-
     private ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest, NetworkType networkType) {
         String publicAddress = authenticationRequest.getPublicAddress();
-        boolean verified = false;
 
         try {
-            if (networkType == NetworkType.NEAR) {
-                if (NearUtil.verifyAddressFromSignature(authenticationRequest, getNonce(authenticationRequest.getAccount()))) {
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(publicAddress, ""));
-                    verified = true;
+            if (NearUtil.verifyAddressFromSignature(authenticationRequest, getNonce(authenticationRequest.getAccount()))) {
+                // Let's clear user's nonce (avoid reusing nonce, forcing re-sign a new message)
+                clearNonce(publicAddress);
+                User user = userRepository.findByNearAddress(publicAddress);
+                if (user == null) {
+                    user = new User();
+                    user.setNearAddress(publicAddress);
+                    user = userRepository.saveAndFlush(user);
                 }
-            } else if (networkType == NetworkType.ETHEREUM) {
-                if (EthUtil.verifyAddressFromSignature(authenticationRequest, getNonce(publicAddress))) {
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(publicAddress, ""));
-                    verified = true;
-                }
+                final String jwt = jwtUtil.generateToken(user);
+                return ResponseEntity.ok(new AuthenticationResponse(jwt));
             } else {
-                log.error("No supported network");
-                throw new AccessDenied("No supported network");
-            }
-            if (!verified) {
                 log.warn("Signed message verification failed for address: {}", publicAddress);
                 throw new AccessDenied("Signed message verification failed");
             }
@@ -109,21 +98,6 @@ public class AuthEndpoint {
             log.error("Unhandled exception. Reason:", e);
             throw new AccessDenied("Error during authentication", e);
         }
-
-        final UserDetails userDetails = userDetailsService.loadUserByNearAddress(publicAddress);
-        final String jwt = jwtUtil.generateToken(userDetails);
-
-        // Let's clear user's nonce (avoid reusing nonce, forcing re-sign a new message)
-        clearNonce(publicAddress);
-
-        User user = userRepository.findByNearAddress(publicAddress);
-        if (user == null) {
-            user = new User();
-            user.setNearAddress(publicAddress);
-            userRepository.save(user);
-        }
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
     private String getNonce(String address) throws Exception {
